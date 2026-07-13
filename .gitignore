@@ -1,0 +1,34 @@
+# Build directories
+build/
+bin/
+obj/
+out/
+.vs/
+.cache/
+.vscode/
+.clangd/
+
+# Compiled objects & binaries
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.pdb
+*.ilk
+mimir_cache
+mimir_unified
+mimir_windows
+
+# Keys and Secrets
+*.pem
+*.key
+.env
+secret.json
+
+# Cache and temporary files
+*.tmp
+*.log
+.DS_Store
+compile_commands.json

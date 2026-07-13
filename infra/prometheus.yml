@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: "mimir_cache_nodes"
+    static_configs:
+      - targets: ["mimir-node-1:8080", "mimir-node-2:8080", "mimir-node-3:8080"]
