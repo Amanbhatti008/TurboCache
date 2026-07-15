@@ -11,7 +11,7 @@ COPY . .
 WORKDIR /app/cpp-cache-engine
 
 # Build the server
-RUN g++ src/epoll_server.cpp -o mimir_server -std=c++17 -O3 -pthread
+RUN g++ src/epoll_server.cpp -o mimir_server -std=c++20 -O3 -pthread
 
 FROM alpine:latest
 

@@ -16,8 +16,10 @@
 #include <queue>
 #include <string>
 #include <cstring>
-#include <csignal>
+#include <signal.h>
 #include <atomic>
+#include <functional>
+#include <cstdio>
 
 #include "lru_shard_legacy.h"
 
@@ -331,7 +333,7 @@ private:
             std::string cache_key = "ai:" + std::to_string(std::hash<std::string>{}(prompt));
             
             // Probe Cache Layer
-            std::string cached = cache_.get_shard(cache_key).get(cache_key);
+            std::string cached(cache_.get_shard(cache_key).get(cache_key));
             if (!cached.empty()) {
                 ctx.write_queue.push("$" + std::to_string(cached.size()) + "\r\n" + cached + "\r\n");
                 return;

@@ -360,7 +360,7 @@ private:
             std::string cache_key = "ai:" + std::to_string(std::hash<std::string>{}(prompt));
             
             // Probe Cache Layer
-            std::string cached = cache_.get_shard(cache_key).get(cache_key);
+            std::string cached(cache_.get_shard(cache_key).get(cache_key));
             if (!cached.empty()) {
                 queue_response(ctx, "$" + std::to_string(cached.size()) + "\r\n" + cached + "\r\n");
                 return;
