@@ -1,20 +1,22 @@
-FROM alpine:latest
+FROM alpine:latest AS builder
 
-# Install build dependencies
 RUN apk add --no-cache build-base linux-headers
 
-# Set working directory
 WORKDIR /app
 
-# Copy the source code
-COPY . .
+# Copy only the source directory (not the whole repo)
+COPY cpp-cache-engine/ .
 
-# Compile the C++ Mimir Server
-# Using -D_linux_ is not strictly needed since epoll_server.cpp uses #ifndef _WIN32
 RUN g++ src/epoll_server.cpp -o mimir_server -std=c++17 -O3 -pthread
 
-# Expose port
+FROM alpine:latest
+
+RUN apk add --no-cache libstdc++
+
+WORKDIR /app
+
+COPY --from=builder /app/mimir_server .
+
 EXPOSE 8080
 
-# Run the server
 CMD ["./mimir_server"]
