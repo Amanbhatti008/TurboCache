@@ -18,24 +18,24 @@ namespace mimir {
 struct XXHash3Hasher {
     using is_transparent = void;
 
-    std::size_t operator()(const std::pmr::string& key) const noexcept {
+    size_t operator()(const std::pmr::string& key) const noexcept {
         return XXH3_64bits(key.data(), key.size());
     }
-    std::size_t operator()(std::string_view key) const noexcept {
+    size_t operator()(std::string_view key) const noexcept {
         return XXH3_64bits(key.data(), key.size());
     }
 };
 
 class CacheShard {
 public:
-    // Initialize the shard with a 64MB pre-allocated contiguous slab
-    CacheShard(size_t slab_size = 64 * 1024 * 1024) 
+    // Initialize the shard with a 16MB pre-allocated contiguous slab to fit in 512MB RAM
+    CacheShard(size_t slab_size = 16 * 1024 * 1024) 
         : buffer_(slab_size, std::byte{0}),
           pmr_resource_(buffer_.data(), buffer_.size(), std::pmr::null_memory_resource()),
           store_(&pmr_resource_) 
     {
         // Pre-allocate buckets to avoid rehashing
-        store_.reserve(1000000); 
+        store_.reserve(100000); 
     }
 
     // Zero-copy get using string_view and transparent hashing
@@ -78,7 +78,7 @@ private:
 
 class ShardedCache {
 public:
-    ShardedCache(size_t num_shards = 16) : shards_(num_shards) {}
+    ShardedCache(size_t num_shards = 8) : shards_(num_shards) {}
 
     CacheShard& get_shard(std::string_view key) {
         size_t hash = XXH3_64bits(key.data(), key.size());

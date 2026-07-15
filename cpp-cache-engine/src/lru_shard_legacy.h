@@ -34,10 +34,10 @@ namespace mimir {
 
 struct XXHash3Hasher {
     using is_transparent = void; // Enable heterogeneous lookup if compiler supports it
-    std::size_t operator()(string_view key) const noexcept {
+    size_t operator()(string_view key) const noexcept {
         return XXH64(key.data(), key.size(), 0);
     }
-    std::size_t operator()(const std::string& key) const noexcept {
+    size_t operator()(const std::string& key) const noexcept {
         return XXH64(key.data(), key.size(), 0);
     }
 };
@@ -77,7 +77,7 @@ private:
 
 class ShardedCache {
 public:
-    ShardedCache(size_t num_shards = 16) : shards_(num_shards) {}
+    ShardedCache(size_t num_shards = 8) : shards_(num_shards) {}
 
     CacheShard& get_shard(string_view key) {
         size_t hash = XXH64(key.data(), key.size(), 0);
